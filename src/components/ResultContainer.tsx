@@ -15,6 +15,7 @@ function ResultContainer({
   response: QueryResponse | null;
 }) {
   const [download, setDownload] = useState<string[]>([]);
+
   const selectAll: boolean = response
     ? response.responses.length === download.length &&
       response.responses.every((r) => download.includes(r.dataset_uuid))
@@ -325,6 +326,8 @@ function ResultContainer({
               pipelines={item.available_pipelines}
               checked={download.includes(item.dataset_uuid)}
               onCheckboxChange={updateDownload}
+              isDataLad={item.is_data_lad} // Pass the isDataLad prop
+              isAggregate={item.is_aggregate} // Pass the isAggregate prop
             />
           ))}
         </div>

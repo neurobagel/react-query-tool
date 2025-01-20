@@ -5,7 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import Checkbox from '@mui/material/Checkbox';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Typography from '@mui/material/Typography';
-import { Tooltip, Divider } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import { modalities } from '../utils/constants';
 
@@ -21,6 +21,8 @@ const ResultCard = memo(
     pipelines,
     checked,
     onCheckboxChange,
+    isDataLad,
+    isAggregate,
   }: {
     nodeName: string;
     datasetName: string;
@@ -29,11 +31,11 @@ const ResultCard = memo(
     datasetTotalSubjects: number;
     numMatchingSubjects: number;
     imageModals: string[];
-    pipelines: {
-      [key: string]: string[];
-    };
+    pipelines: { [key: string]: string[] };
     checked: boolean;
     onCheckboxChange: (id: string) => void;
+    isDataLad: boolean;
+    isAggregate: boolean;
   }) => (
     <Card data-cy={`card-${datasetUUID}`}>
       <CardContent>
@@ -71,6 +73,11 @@ const ResultCard = memo(
               <Typography variant="subtitle2">
                 {numMatchingSubjects} subjects match / {datasetTotalSubjects} total subjects
               </Typography>
+
+              <Typography variant="body2" color="textSecondary">
+                {isDataLad ? 'DataLad dataset' : 'Not a DataLad dataset'} |{' '}
+                {isAggregate ? 'Aggregate dataset' : 'Not an aggregate dataset'}
+              </Typography>
             </div>
           </div>
           <div className="justify-self-center">
@@ -88,15 +95,19 @@ const ResultCard = memo(
               <Tooltip
                 data-cy={`card-${datasetUUID}-available-pipelines-tooltip`}
                 title={
-                  <Typography variant="body1">
+                  <div>
                     {Object.entries(pipelines)
                       .flatMap(([name, versions]) =>
-                        versions.map((version) => `${name.split('/').slice(-1)[0]} ${version}`)
+                        versions.map(
+                          (version) => `${name.split('/').slice(-1)[0]} ${version}`
+                        )
                       )
-                      .map((pipeline) => (
-                        <Divider>{pipeline}</Divider>
+                      .map((pipeline, index) => (
+                        <Typography key={index} variant="body2" sx={{ display: 'block' }}>
+                          {pipeline}
+                        </Typography>
                       ))}
-                  </Typography>
+                  </div>
                 }
                 placement="top"
               >
@@ -139,3 +150,4 @@ const ResultCard = memo(
 );
 
 export default ResultCard;
+
