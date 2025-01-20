@@ -23,9 +23,13 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [react()],
     envPrefix: 'NB_',
-    // Excluding the Auth0 library from the bundle to avoid issues with
-    // Cypress component tests. TODO: understand why this is necessary
+
     optimizeDeps: {
+      // Including MUI and emotion here for local
+      // Cypress component testing to work
+      include: ['@emotion/react', '@emotion/styled', '@mui/material/Tooltip'],
+      // Excluding the Auth0 library from the bundle to avoid issues with
+      // Cypress component tests. TODO: understand why this is necessary
       exclude: ['@auth0/auth0-react'],
     },
   };

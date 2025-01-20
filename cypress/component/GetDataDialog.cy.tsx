@@ -24,4 +24,19 @@ describe('GetDataDialog', () => {
     cy.get('[data-cy="get-data-dialog-close-button"]').click();
     cy.get('@onCloseSpy').should('have.been.called');
   });
+
+  it('Switches between docker and singularity commands', () => {
+    cy.mount(<GetDataDialog open={props.open} onClose={props.onClose} />);
+
+    cy.get('button').contains('docker').should('exist');
+    cy.get('button').contains('singularity').should('exist');
+
+    cy.get('code').should('contain', 'docker run');
+
+    cy.get('button').contains('singularity').click();
+    cy.get('code').should('contain', 'singularity run');
+
+    cy.get('button').contains('docker').click();
+    cy.get('code').should('contain', 'docker run');
+  });
 });

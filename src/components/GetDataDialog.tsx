@@ -9,6 +9,8 @@ import {
   DialogContent,
   DialogContentText,
   useMediaQuery,
+  ToggleButton,
+  ToggleButtonGroup,
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useTheme } from '@mui/material/styles';
@@ -17,14 +19,19 @@ import NBTheme from '../theme';
 function GetDataDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const DOCKER_RUN_COMMAND =
     'docker run -t -u $(id -u):$(id -g) -v $(pwd):/data neurobagel/dataget:latest /data/neurobagel-query-results.tsv /data/output';
+  const SINGULARITY_RUN_COMMAND =
+    'singularity run --bind $(pwd):/data docker://neurobagel/dataget:latest /data/neurobagel-query-results.tsv /data/output';
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+  const [commandType, setCommandType] = React.useState('docker');
+  const showRunCommand = commandType === 'docker' ? DOCKER_RUN_COMMAND : SINGULARITY_RUN_COMMAND;
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [showPopover, setShowPopover] = useState(false);
 
   const handleCopyClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    navigator.clipboard.writeText(DOCKER_RUN_COMMAND);
+    navigator.clipboard.writeText(showRunCommand);
     setAnchorEl(event.currentTarget);
     setShowPopover(true);
 
@@ -36,6 +43,10 @@ function GetDataDialog({ open, onClose }: { open: boolean; onClose: () => void }
   const handleClose = () => {
     setAnchorEl(null);
     setShowPopover(false);
+  };
+
+  const handleChange = (_event: React.MouseEvent<HTMLElement>, newCommand: string) => {
+    setCommandType(newCommand);
   };
 
   return (
@@ -57,9 +68,19 @@ function GetDataDialog({ open, onClose }: { open: boolean; onClose: () => void }
             <li>Copy and run the command below</li>
           </ol>
         </DialogContentText>
+        <ToggleButtonGroup
+          color="primary"
+          value={commandType}
+          exclusive
+          onChange={handleChange}
+          aria-label="Platform"
+        >
+          <ToggleButton value="docker">docker</ToggleButton>
+          <ToggleButton value="singularity">singularity</ToggleButton>
+        </ToggleButtonGroup>
         <DialogContentText>
           <div className="flex items-center rounded bg-gray-200 px-2 py-1 text-sm">
-            <code className="flex-grow text-black">{DOCKER_RUN_COMMAND}</code>
+            <code className="flex-grow text-black">{showRunCommand}</code>
             <IconButton
               color="primary"
               onClick={handleCopyClick}
