@@ -86,9 +86,16 @@ describe('Successful API attribute responses', () => {
     ).as('getDiagnosisOptions');
     cy.visit('/');
     cy.wait('@getDiagnosisOptions');
-    cy.get('.notistack-SnackbarContainer')
-      .find('.notistack-MuiContent-info')
-      .should('contain', 'No diagnoses options were available');
+    cy.get("[data-cy='navbar']").find('svg[data-testid="NotificationsIcon"]').should('exist');
+    cy.get("[data-cy='navbar']")
+      .find('svg[data-testid="NotificationsIcon"]')
+      .click({ force: true });
+    cy.get('.MuiListItem-root')
+      .eq(0)
+      .within(() => {
+        cy.get('.MuiListItemText-primary').should('contain', 'INFO');
+        cy.get('p').should('contain.text', 'No diagnoses options were available');
+      });
   });
   it('Empty assessment response makes info toast appear', () => {
     cy.intercept(
@@ -100,10 +107,16 @@ describe('Successful API attribute responses', () => {
     ).as('getAssessmentToolOptions');
     cy.visit('/');
     cy.wait('@getAssessmentToolOptions');
-
-    cy.get('.notistack-SnackbarContainer')
-      .find('.notistack-MuiContent-info')
-      .should('contain', 'No assessments options were available');
+    cy.get("[data-cy='navbar']").find('svg[data-testid="NotificationsIcon"]').should('exist');
+    cy.get("[data-cy='navbar']")
+      .find('svg[data-testid="NotificationsIcon"]')
+      .click({ force: true });
+    cy.get('.MuiListItem-root')
+      .eq(0)
+      .within(() => {
+        cy.get('.MuiListItemText-primary').should('contain', 'INFO');
+        cy.get('p').should('contain.text', 'No assessments options were available');
+      });
   });
   it('Empty pipeline response makes info toast appear', () => {
     cy.intercept(
@@ -115,9 +128,16 @@ describe('Successful API attribute responses', () => {
     ).as('getPipelineOptions');
     cy.visit('/');
     cy.wait('@getPipelineOptions');
-    cy.get('.notistack-SnackbarContainer')
-      .find('.notistack-MuiContent-info')
-      .should('contain', 'No pipelines options were available');
+    cy.get("[data-cy='navbar']").find('svg[data-testid="NotificationsIcon"]').should('exist');
+    cy.get("[data-cy='navbar']")
+      .find('svg[data-testid="NotificationsIcon"]')
+      .click({ force: true });
+    cy.get('.MuiListItem-root')
+      .eq(0)
+      .within(() => {
+        cy.get('.MuiListItemText-primary').should('contain', 'INFO');
+        cy.get('p').should('contain.text', 'No pipelines options were available');
+      });
   });
   it('Empty pipeline version response makes info toast appear', () => {
     cy.intercept(
@@ -131,9 +151,16 @@ describe('Successful API attribute responses', () => {
     cy.get('[data-cy="close-auth-dialog-button"]').click();
     cy.get('[data-cy="Pipeline name-categorical-field"]').type('fmri{downarrow}{enter}');
     cy.wait('@getPipelineVersionsOptions');
-    cy.get('.notistack-SnackbarContainer')
-      .find('.notistack-MuiContent-info')
-      .should('contain', 'No fmriprep versions were available');
+    cy.get("[data-cy='navbar']").find('svg[data-testid="NotificationsIcon"]').should('exist');
+    cy.get("[data-cy='navbar']")
+      .find('svg[data-testid="NotificationsIcon"]')
+      .click({ force: true });
+    cy.get('.MuiListItem-root')
+      .eq(0)
+      .within(() => {
+        cy.get('.MuiListItemText-primary').should('contain', 'INFO');
+        cy.get('p').should('contain.text', 'No fmriprep versions were available');
+      });
   });
 });
 
@@ -183,27 +210,35 @@ describe('Partially successful API attribute responses', () => {
     ]);
   });
   it('Shows warning for node that failed Assessment tool option request', () => {
-    cy.get('.notistack-SnackbarContainer')
-      .find('.notistack-MuiContent-warning')
-      .should('contain', 'NoAssessmentNode');
+    cy.get("[data-cy='navbar']").find('svg[data-testid="NotificationsIcon"]').should('exist');
+    cy.get("[data-cy='navbar']")
+      .find('svg[data-testid="NotificationsIcon"]')
+      .click({ force: true });
+    cy.get('.MuiList-root').should('contain', 'NoAssessmentNode');
   });
   it('Shows warning for node that failed Diagnosis option request', () => {
-    cy.get('.notistack-SnackbarContainer')
-      .find('.notistack-MuiContent-warning')
-      .should('contain', 'NoDiagnosisNode');
+    cy.get("[data-cy='navbar']").find('svg[data-testid="NotificationsIcon"]').should('exist');
+    cy.get("[data-cy='navbar']")
+      .find('svg[data-testid="NotificationsIcon"]')
+      .click({ force: true });
+    cy.get('.MuiList-root').should('contain', 'NoDiagnosisNode');
   });
   it('Shows warning for node that failed Pipeline option request', () => {
-    cy.get('.notistack-SnackbarContainer')
-      .find('.notistack-MuiContent-warning')
-      .should('contain', 'NoPipelineNode');
+    cy.get("[data-cy='navbar']").find('svg[data-testid="NotificationsIcon"]').should('exist');
+    cy.get("[data-cy='navbar']")
+      .find('svg[data-testid="NotificationsIcon"]')
+      .click({ force: true });
+    cy.get('.MuiList-root').should('contain', 'NoPipelineNode');
   });
   it('Shows warning for node that failed Pipeline version option request', () => {
     cy.get('[data-cy="close-auth-dialog-button"]').click();
     cy.get('[data-cy="Pipeline name-categorical-field"]').type('fmri{downarrow}{enter}');
     cy.wait('@getPipelineVersionsOptions');
-    cy.get('.notistack-SnackbarContainer')
-      .find('.notistack-MuiContent-warning')
-      .should('contain', 'NoPipelineVersionNode');
+    cy.get("[data-cy='navbar']").find('svg[data-testid="NotificationsIcon"]').should('exist');
+    cy.get("[data-cy='navbar']")
+      .find('svg[data-testid="NotificationsIcon"]')
+      .click({ force: true });
+    cy.get('.MuiList-root').should('contain', 'NoPipelineVersionNode');
   });
 });
 
@@ -505,9 +540,11 @@ describe('Partially successful API query requests', () => {
   it('Shows a warning for nodes that failed to return any results', () => {
     cy.get('[data-cy="submit-query-button"]').click();
     cy.wait('@call');
-    cy.get('.notistack-SnackbarContainer')
-      .find('.notistack-MuiContent-warning')
-      .should('contain', 'DidNotWorkNode');
+    cy.get("[data-cy='navbar']").find('svg[data-testid="NotificationsIcon"]').should('exist');
+    cy.get("[data-cy='navbar']")
+      .find('svg[data-testid="NotificationsIcon"]')
+      .click({ force: true });
+    cy.get('.MuiList-root').should('contain', 'DidNotWorkNode');
   });
 });
 
